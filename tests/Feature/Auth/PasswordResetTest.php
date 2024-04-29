@@ -2,16 +2,26 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Livewire\Volt\Volt;
+use Mth\Tenant\Adapters\Models\User;
+use Tests\Helpers\TestSuite;
 use Tests\TestCase;
 
 class PasswordResetTest extends TestCase
 {
-    use RefreshDatabase;
+    // TODO Modify to work on tenant
+    public function setUp(): void
+    {
+        parent::setUp();
+        TestSuite::refreshDatabaseAsTenant();
+    }
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        TestSuite::cleanDatabase();
+    }
 
     public function test_reset_password_link_screen_can_be_rendered(): void
     {

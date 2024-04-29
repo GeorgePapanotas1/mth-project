@@ -8,7 +8,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 interface ICrudRepository
 {
-    public function find(int $id): ?Model;
+    public function find(string $id): ?Model;
     public function findBy(array $criteria, array $columns = ['*']): ?Model;
     public function findAll(array $criteria = []): Collection;
     public function findWhereIn(string $column, array $values, array $columns = ['*']): Collection;

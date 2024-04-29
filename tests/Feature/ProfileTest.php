@@ -2,14 +2,23 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Volt\Volt;
+use Mth\Tenant\Adapters\Models\User;
+use Tests\Helpers\TestSuite;
 use Tests\TestCase;
 
 class ProfileTest extends TestCase
 {
-    use RefreshDatabase;
+    public function setUp(): void
+    {
+        parent::setUp();
+        TestSuite::refreshDatabaseAsLandlord();
+    }
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        TestSuite::cleanDatabase();
+    }
 
     public function test_profile_page_is_displayed(): void
     {

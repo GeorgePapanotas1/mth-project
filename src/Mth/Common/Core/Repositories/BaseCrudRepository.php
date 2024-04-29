@@ -18,7 +18,7 @@ abstract class BaseCrudRepository implements ICrudRepository
 
     abstract protected function getModel(): Model;
 
-    public function find(int $id): ?Model
+    public function find(string $id): ?Model
     {
         return $this->model->find($id);
     }

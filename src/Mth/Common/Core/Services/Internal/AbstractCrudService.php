@@ -13,7 +13,7 @@ abstract class AbstractCrudService implements ICrudService
 {
     abstract protected function repository(): ICrudRepository;
 
-    public function find(int $id): ?Model
+    public function find(string $id): ?Model
     {
         return $this->repository()->find($id);
     }
@@ -43,7 +43,7 @@ abstract class AbstractCrudService implements ICrudService
         return $this->repository()->create($attributes);
     }
 
-    public function update(int $id, array $attributes): ?Model
+    public function update(string $id, array $attributes): ?Model
     {
         $model = $this->repository()->find($id);
         if ($model) {
@@ -52,7 +52,7 @@ abstract class AbstractCrudService implements ICrudService
         return null;
     }
 
-    public function delete(int $id): bool
+    public function delete(string $id): bool
     {
         $model = $this->repository()->find($id);
         if ($model) {
