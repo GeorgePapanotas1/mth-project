@@ -51,6 +51,7 @@ abstract class BaseCrudRepository implements ICrudRepository
     public function update(Model $model, array $attributes): Model
     {
         $model->update($attributes);
+
         return $model;
     }
 
@@ -83,5 +84,4 @@ abstract class BaseCrudRepository implements ICrudRepository
     {
         return $this->model->where($criteria)->delete();
     }
-
 }

@@ -11,6 +11,7 @@ class Project extends Model
 {
     use HasFactory;
     use HasUuids;
+
     protected $keyType = 'string';
     protected $guarded = ['id'];
 
@@ -25,7 +26,7 @@ class Project extends Model
     /**
      * Get the user that is associated with the project.
      */
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->usersCompany->user();
     }
@@ -33,7 +34,7 @@ class Project extends Model
     /**
      * Get the company that is associated with the project.
      */
-    public function company()
+    public function company(): BelongsTo
     {
         return $this->usersCompany->company();
     }

@@ -16,7 +16,6 @@ beforeEach(function () {
 
 testBasicCrudOperations(Company::class, app()->make(CompanyCrudService::class));
 
-
-afterAll(function (){
+afterAll(function () {
     TestSuite::cleanDatabase();
 });

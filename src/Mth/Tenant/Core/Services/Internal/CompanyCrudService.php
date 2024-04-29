@@ -8,13 +8,12 @@ use Mth\Tenant\Core\Repositories\Crud\CompanyCrudRepository;
 
 class CompanyCrudService extends AbstractCrudService
 {
-
     public function __construct(
         protected readonly CompanyCrudRepository $companyCrudRepository
-    )
-    {
+    ) {
 
     }
+
     protected function repository(): ICrudRepository
     {
         return $this->companyCrudRepository;

@@ -10,8 +10,7 @@ class UserCrudService extends AbstractCrudService
 {
     public function __construct(
         protected readonly UserCrudRepository $userCrudRepository
-    )
-    {
+    ) {
 
     }
 

@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-
 abstract class AbstractCrudService implements ICrudService
 {
     abstract protected function repository(): ICrudRepository;
@@ -49,6 +48,7 @@ abstract class AbstractCrudService implements ICrudService
         if ($model) {
             return $this->repository()->update($model, $attributes);
         }
+
         return null;
     }
 
@@ -58,6 +58,7 @@ abstract class AbstractCrudService implements ICrudService
         if ($model) {
             return $this->repository()->delete($model);
         }
+
         return false;
     }
 

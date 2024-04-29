@@ -6,11 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class TestSuite
 {
-
     public static function refreshDatabaseAsTenant(): void
     {
         shell_exec('php artisan migrate:fresh --env=testing --path=database/migrations/tenant');
-
     }
 
     public static function refreshDatabaseAsLandlord(): void

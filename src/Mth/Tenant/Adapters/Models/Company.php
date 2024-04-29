@@ -12,6 +12,7 @@ class Company extends Model
 {
     use HasFactory;
     use HasUuids;
+
     protected $keyType = 'string';
     protected $guarded = ['id'];
 
