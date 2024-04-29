@@ -1,16 +1,16 @@
 <?php
 
-namespace Mth\Landlord\Core\Repositories\CRUD;
+namespace Mth\Tenant\Core\Repositories\Crud;
 
 use Illuminate\Database\Eloquent\Model;
 use Mth\Common\Core\Contracts\ICrudRepository;
 use Mth\Common\Core\Repositories\BaseCrudRepository;
-use Mth\Landlord\Adapters\Models\Tenant;
+use Mth\Tenant\Adapters\Models\Company;
 
-class TenantCrudRepository extends BaseCrudRepository implements ICrudRepository
+class CompanyCrudRepository extends BaseCrudRepository implements ICrudRepository
 {
     protected function getModel(): Model
     {
-        return new Tenant;
+        return new Company();
     }
 }

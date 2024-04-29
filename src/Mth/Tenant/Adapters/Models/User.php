@@ -3,14 +3,17 @@
 namespace Mth\Tenant\Adapters\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
-
+    use HasFactory, Notifiable, HasUuids;
+    protected $keyType = 'string';
     /**
      * The attributes that are mass assignable.
      *
@@ -43,5 +46,28 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * The companies that the user belongs to.
+     */
+    public function companies(): BelongsToMany
+    {
+        return $this->belongsToMany(Company::class, 'users_companies');
+    }
+
+    /**
+     * The projects that the user is associated with through companies.
+     */
+    public function projects(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Project::class,
+            UsersCompanies::class,
+            'user_id',
+            'user_company_id',
+            'id',
+            'id'
+        );
     }
 }

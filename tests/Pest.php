@@ -11,6 +11,7 @@
 |
 */
 
+use Illuminate\Support\Facades\Hash;
 use Mth\Common\Core\Contracts\ICrudService;
 
 uses(
@@ -51,6 +52,11 @@ function testBasicCrudOperations(string $modelClass, ICrudService $service): voi
 
     test('creates a model', function () use ($modelClass, $service) {
         $modelData = $modelClass::factory()->make()->toArray();
+
+        if (isUserClass($modelClass)) {
+            $modelData['password'] = Hash::make('password');
+        }
+
         $createdModel = $service->create($modelData);
         expect($createdModel)->toBeInstanceOf($modelClass);
         $this->assertDatabaseHas((new $modelClass)->getTable(), $modelData);
@@ -66,7 +72,16 @@ function testBasicCrudOperations(string $modelClass, ICrudService $service): voi
     test('updates a model', function () use ($modelClass, $service) {
         $model = $modelClass::factory()->create();
         $updateData = $modelClass::factory()->make()->toArray();
+
+        if (isUserClass($modelClass)) {
+            $updateData['password'] = Hash::make('password');
+        }
+
         $updatedModel = $service->update($model->id, $updateData);
+
+        if (isUserClass($modelClass)) {
+            unset($updateData['password']);
+        }
         expect($updatedModel->fresh()->toArray())->toMatchArray($updateData);
     });
 
@@ -81,4 +96,9 @@ function testBasicCrudOperations(string $modelClass, ICrudService $service): voi
         $models = $service->all();
         expect($models)->toHaveCount(3);
     });
+}
+
+function isUserClass(string $modelClass): bool
+{
+    return $modelClass === 'Mth\Tenant\Adapters\Models\User';
 }

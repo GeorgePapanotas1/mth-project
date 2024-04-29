@@ -4,7 +4,7 @@ namespace Mth\Landlord\Core\Services\Internal;
 
 use Mth\Common\Core\Contracts\ICrudRepository;
 use Mth\Common\Core\Services\Internal\AbstractCrudService;
-use Mth\Landlord\Core\Repositories\CRUD\TenantCrudRepository;
+use Mth\Landlord\Core\Repositories\Crud\TenantCrudRepository;
 
 class TenantCrudService extends AbstractCrudService
 {

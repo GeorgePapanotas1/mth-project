@@ -9,7 +9,7 @@ class TestSuite
 
     public static function refreshDatabaseAsTenant(): void
     {
-        shell_exec('php artisan migrate:fresh --env=testing --path=database/migrations/landlord');
+        shell_exec('php artisan migrate:fresh --env=testing --path=database/migrations/tenant');
 
     }
 
