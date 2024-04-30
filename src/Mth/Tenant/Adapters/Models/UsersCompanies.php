@@ -15,15 +15,7 @@ class UsersCompanies extends Model
 
     protected $keyType = 'string';
     protected $guarded = ['id'];
-
-    /**
-     * The projects associated with the users_companies pivot.
-     */
-    public function projects(): HasMany
-    {
-        return $this->hasMany(Project::class, 'user_company_id');
-    }
-
+    
     /**
      * Get the user associated with the pivot.
      */

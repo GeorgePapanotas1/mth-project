@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Company extends Model
@@ -25,17 +26,10 @@ class Company extends Model
     }
 
     /**
-     * The projects that are associated with the company through users.
+     * The projects associated with the company.
      */
-    public function projects(): HasManyThrough
+    public function projects(): HasMany
     {
-        return $this->hasManyThrough(
-            Project::class,
-            UsersCompanies::class,
-            'company_id',
-            'user_company_id',
-            'id',
-            'id'
-        );
+        return $this->hasMany(Project::class, 'company_id');
     }
 }

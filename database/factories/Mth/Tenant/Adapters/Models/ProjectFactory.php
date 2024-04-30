@@ -1,10 +1,11 @@
 <?php
 
 namespace Database\Factories\Mth\Tenant\Adapters\Models;
+
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
+use Mth\Tenant\Adapters\Models\Company;
 use Mth\Tenant\Adapters\Models\Project;
-use Mth\Tenant\Adapters\Models\UsersCompanies;
+use Mth\Tenant\Adapters\Models\User;
 
 /**
  * @extends Factory<Project>
@@ -12,12 +13,14 @@ use Mth\Tenant\Adapters\Models\UsersCompanies;
 class ProjectFactory extends Factory
 {
     protected $model = Project::class;
+
     public function definition(): array
     {
         return [
-            'name' => $this->faker->word,
+            'name'        => $this->faker->word,
             'description' => $this->faker->paragraph,
-            'user_company_id' => UsersCompanies::factory(),
+            'creator_id'  => User::factory(),
+            'company_id'  => Company::factory()
         ];
     }
 }
