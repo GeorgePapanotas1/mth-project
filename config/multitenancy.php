@@ -19,12 +19,12 @@ return [
      * This class should extend `Spatie\Multitenancy\TenantFinder\TenantFinder`
      *
      */
-    'tenant_finder' => null,
+    'tenant_finder'                      => null,
 
     /*
      * These fields are used by tenant:artisan command to match one or more tenant.
      */
-    'tenant_artisan_search_fields' => [
+    'tenant_artisan_search_fields'       => [
         'id',
     ],
 
@@ -33,10 +33,10 @@ return [
      *
      * A valid task is any class that implements Spatie\Multitenancy\Tasks\SwitchTenantTask
      */
-    'switch_tenant_tasks' => [
+    'switch_tenant_tasks'                => [
         // \Spatie\Multitenancy\Tasks\PrefixCacheTask::class,
-         \Spatie\Multitenancy\Tasks\SwitchTenantDatabaseTask::class,
-         \Spatie\Multitenancy\Tasks\SwitchRouteCacheTask::class,
+        \Spatie\Multitenancy\Tasks\SwitchTenantDatabaseTask::class,
+        \Spatie\Multitenancy\Tasks\SwitchRouteCacheTask::class,
     ],
 
     /*
@@ -44,7 +44,7 @@ return [
      *
      * It must be or extend `Spatie\Multitenancy\Models\Tenant::class`
      */
-    'tenant_model' => Tenant::class,
+    'tenant_model'                       => \Mth\Landlord\Adapters\Models\Tenant::class,
 
     /*
      * If there is a current tenant when dispatching a job, the id of the current tenant
@@ -58,33 +58,33 @@ return [
      *
      * Set to `null` to use the default connection.
      */
-    'tenant_database_connection_name' => 'tenant',
+    'tenant_database_connection_name'    => 'tenant',
 
     /*
      * The connection name to reach the landlord database.
      */
-    'landlord_database_connection_name' => 'landlord',
+    'landlord_database_connection_name'  => 'landlord',
 
     /*
      * This key will be used to bind the current tenant in the container.
      */
-    'current_tenant_container_key' => 'currentTenant',
+    'current_tenant_container_key'       => 'currentTenant',
 
     /**
      * Set it to `true` if you like to cache the tenant(s) routes
      * in a shared file using the `SwitchRouteCacheTask`.
      */
-    'shared_routes_cache' => false,
+    'shared_routes_cache'                => false,
 
     /*
      * You can customize some of the behavior of this package by using your own custom action.
      * Your custom action should always extend the default one.
      */
-    'actions' => [
-        'make_tenant_current_action' => MakeTenantCurrentAction::class,
-        'forget_current_tenant_action' => ForgetCurrentTenantAction::class,
+    'actions'                            => [
+        'make_tenant_current_action'     => MakeTenantCurrentAction::class,
+        'forget_current_tenant_action'   => ForgetCurrentTenantAction::class,
         'make_queue_tenant_aware_action' => MakeQueueTenantAwareAction::class,
-        'migrate_tenant' => MigrateTenantAction::class,
+        'migrate_tenant'                 => MigrateTenantAction::class,
     ],
 
     /*
@@ -93,25 +93,25 @@ return [
      * For example, using the package laravel-actions (by Loris Leiva), you can
      * resolve JobDecorator to getAction() like so: JobDecorator::class => 'getAction'
      */
-    'queueable_to_job' => [
-        SendQueuedMailable::class => 'mailable',
+    'queueable_to_job'                   => [
+        SendQueuedMailable::class      => 'mailable',
         SendQueuedNotifications::class => 'notification',
-        CallQueuedClosure::class => 'closure',
-        CallQueuedListener::class => 'class',
-        BroadcastEvent::class => 'event',
+        CallQueuedClosure::class       => 'closure',
+        CallQueuedListener::class      => 'class',
+        BroadcastEvent::class          => 'event',
     ],
 
     /*
      * Jobs tenant aware even if these don't implement the TenantAware interface.
      */
-    'tenant_aware_jobs' => [
+    'tenant_aware_jobs'                  => [
         // ...
     ],
 
     /*
      * Jobs not tenant aware even if these don't implement the NotTenantAware interface.
      */
-    'not_tenant_aware_jobs' => [
+    'not_tenant_aware_jobs'              => [
         // ...
     ],
 ];
