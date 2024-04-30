@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Mth\Tenant\Core\Constants\ColumnNames\ProjectColumns;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
@@ -57,9 +58,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Company::class, 'users_companies');
     }
-    
+
     public function projects(): HasMany
     {
-        return $this->hasMany(Project::class, 'user_id');
+        return $this->hasMany(Project::class, ProjectColumns::CREATOR_ID);
     }
 }

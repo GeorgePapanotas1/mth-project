@@ -16,19 +16,11 @@ class Project extends Model
     protected $guarded = ['id'];
 
     /**
-     * Get the users_companies pivot that the project belongs to.
-     */
-    public function usersCompany(): BelongsTo
-    {
-        return $this->belongsTo(UsersCompanies::class, 'user_company_id');
-    }
-
-    /**
      * Get the user that is associated with the project.
      */
-    public function user(): BelongsTo
+    public function creator(): BelongsTo
     {
-        return $this->usersCompany->user();
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -36,6 +28,6 @@ class Project extends Model
      */
     public function company(): BelongsTo
     {
-        return $this->usersCompany->company();
+        return $this->belongsTo(Company::class);
     }
 }

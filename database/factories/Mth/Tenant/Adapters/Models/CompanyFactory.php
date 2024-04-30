@@ -5,6 +5,7 @@ namespace Database\Factories\Mth\Tenant\Adapters\Models;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use Mth\Tenant\Adapters\Models\Company;
+use Mth\Tenant\Core\Constants\ColumnNames\CompanyColumns;
 
 /**
  * @extends Factory<Company>
@@ -12,11 +13,12 @@ use Mth\Tenant\Adapters\Models\Company;
 class CompanyFactory extends Factory
 {
     protected $model = Company::class;
+
     public function definition(): array
     {
         return [
-            'name' => $this->faker->company,
-            'address' => $this->faker->address,
+            CompanyColumns::NAME    => $this->faker->company,
+            CompanyColumns::ADDRESS => $this->faker->address,
         ];
     }
 }
