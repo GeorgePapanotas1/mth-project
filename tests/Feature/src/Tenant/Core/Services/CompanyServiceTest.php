@@ -10,10 +10,7 @@ use Mth\Tenant\Core\Constants\ColumnNames\UsersCompaniesColumns;
 use Mth\Tenant\Core\Dto\Authorization\Forms\CreateRoleForm;
 use Mth\Tenant\Core\Dto\Company\Forms\CreateCompanyForm;
 use Mth\Tenant\Core\Dto\Company\Forms\UpdateCompanyForm;
-use Mth\Tenant\Core\Exceptions\Authorization\RoleCreationException;
 use Mth\Tenant\Core\Exceptions\Authorization\UnauthorizedException;
-use Mth\Tenant\Core\Services\Authorization\AuthorizationService;
-use Mth\Tenant\Core\Services\CompanyService;
 use Tests\Helpers\TestSuite;
 
 beforeAll(function () {
@@ -224,6 +221,23 @@ test('it returns no companies on random user', function () {
 
     $userCompanies = $companyService->getCompanies($user);
 })->throws(UnauthorizedException::class);
+
+test('it returns all companies of user', function () {
+
+    $associatedCompanies = Company::factory()->count(15)->create();
+    $user                = User::factory()->create();
+
+    $unassociatedCompanies = Company::factory()->count(12)->create();
+
+    $companyService = getCompanyService();
+
+    $companyService->associateCompanies($user, $associatedCompanies->pluck('id')->toArray());
+
+    $companiesOfUser = $companyService->getCompaniesOfUser($user);
+
+    expect($companiesOfUser)
+        ->toHaveCount(15);
+});
 
 function testCompanyCreation(Company $company, CreateCompanyForm $companyForm): void
 {

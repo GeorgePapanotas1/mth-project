@@ -34,7 +34,7 @@ class Arrayable
 
     public static function toDatabaseArray(object $object, $dateFormat = 'Y-m-d H:i:s', array $except = []): array
     {
-        return self::toArray($object, true, $dateFormat, true, $except);
+        return self::toArray($object, false, $dateFormat, true, $except);
     }
 
     /**

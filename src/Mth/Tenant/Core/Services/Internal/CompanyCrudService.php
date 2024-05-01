@@ -35,6 +35,18 @@ class CompanyCrudService extends AbstractCrudService
         return $company->users()->sync($userIds);
     }
 
+    public function associateCompanies(
+        User $user,
+        ?array $companyIds,
+        bool $withoutDetach = true
+    ): array {
+        if ($withoutDetach) {
+            return $user->companies()->syncWithoutDetaching($companyIds);
+        }
+
+        return $user->companies()->sync($companyIds);
+    }
+
     public function getCompanies(
         int $perPage,
         int $page
@@ -42,7 +54,7 @@ class CompanyCrudService extends AbstractCrudService
         return $this->paginate($perPage, ['*'], $page)->items();
     }
 
-    public function getCompaniesOfUser(
+    public function getCompaniesOfUserPaginated(
         User $user,
         int $perPage,
         int $page
@@ -51,5 +63,13 @@ class CompanyCrudService extends AbstractCrudService
         return $user->load('companies')
                     ->companies()
                     ->paginate($perPage, ['*'], $page)->items();
+    }
+
+    public function getCompaniesOfUser(
+        User $user
+    ): array {
+        return $user->load('companies')
+                    ->companies()
+                    ->get()->toArray();
     }
 }

@@ -24,4 +24,18 @@ class ProjectFactory extends Factory
             ProjectColumns::COMPANY_ID  => Company::factory(),
         ];
     }
+
+    public function ofCreator(string $creatorId): self
+    {
+        return $this->state(function (array $attributes) use ($creatorId) {
+            return [ProjectColumns::CREATOR_ID => $creatorId];
+        });
+    }
+
+    public function ofCompany(string $companyId): self
+    {
+        return $this->state(function (array $attributes) use ($companyId) {
+            return [ProjectColumns::COMPANY_ID => $companyId];
+        });
+    }
 }

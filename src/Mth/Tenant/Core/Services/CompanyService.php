@@ -65,6 +65,14 @@ readonly class CompanyService
         return $this->crudService->associateUser($company, $userIds, $withoutDetach);
     }
 
+    public function associateCompanies(
+        User $user,
+        ?array $companyIds,
+        bool $withoutDetach = true
+    ): array {
+        return $this->crudService->associateCompanies($user, $companyIds, $withoutDetach);
+    }
+
     /**
      * @throws UnauthorizedException
      */
@@ -77,9 +85,15 @@ readonly class CompanyService
         if ($this->authorizationService->isAdmin($user)) {
             return $this->crudService->getCompanies($perPage, $page);
         } elseif ($this->authorizationService->isModerator($user)) {
-            return $this->crudService->getCompaniesOfUser($user, $perPage, $page);
+            return $this->crudService->getCompaniesOfUserPaginated($user, $perPage, $page);
         }
 
         throw new UnauthorizedException('Unauthorized User');
+    }
+
+    public function getCompaniesOfUser(
+        User $user
+    ): array {
+        return $this->crudService->getCompaniesOfUser($user);
     }
 }

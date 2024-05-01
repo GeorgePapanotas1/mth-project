@@ -17,6 +17,7 @@ use Mth\Tenant\Adapters\Models\User;
 use Mth\Tenant\Core\Dto\Authorization\Forms\CreateRoleForm;
 use Mth\Tenant\Core\Services\Authorization\AuthorizationService;
 use Mth\Tenant\Core\Services\CompanyService;
+use Mth\Tenant\Core\Services\ProjectService;
 use Mth\Tenant\Core\Services\UserService;
 
 uses(
@@ -119,6 +120,11 @@ function getAuthorizationService(): AuthorizationService
 function getCompanyService(): CompanyService
 {
     return app()->get(CompanyService::class);
+}
+
+function getProjectService(): ProjectService
+{
+    return app()->get(ProjectService::class);
 }
 
 function createUserAndAssignRole(string $role): User
