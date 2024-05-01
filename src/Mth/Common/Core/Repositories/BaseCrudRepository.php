@@ -6,6 +6,7 @@ use Mth\Common\Core\Contracts\ICrudRepository;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Mth\Tenant\Adapters\Models\Company;
 
 abstract class BaseCrudRepository implements ICrudRepository
 {
@@ -65,9 +66,9 @@ abstract class BaseCrudRepository implements ICrudRepository
         return $this->model->all($columns);
     }
 
-    public function paginate(int $perPage = 15, array $columns = ['*']): LengthAwarePaginator
+    public function paginate(int $perPage = 15, array $columns = ['*'], int $page = 1): LengthAwarePaginator
     {
-        return $this->model->paginate($perPage, $columns);
+        return $this->model::paginate($perPage, $columns, null, $page);
     }
 
     public function bulkCreate(array $attributes): Collection

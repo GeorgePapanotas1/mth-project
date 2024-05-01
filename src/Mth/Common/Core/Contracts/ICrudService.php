@@ -28,7 +28,7 @@ interface ICrudService
 
     public function all(array $columns = ['*']): Collection;
 
-    public function paginate(int $perPage = 15, array $columns = ['*']): LengthAwarePaginator;
+    public function paginate(int $perPage = 15, array $columns = ['*'], int $page = 1): LengthAwarePaginator;
 
     public function bulkCreate(array $attributes): Collection;
 

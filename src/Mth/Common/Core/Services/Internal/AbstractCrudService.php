@@ -67,9 +67,9 @@ abstract class AbstractCrudService implements ICrudService
         return $this->repository()->all($columns);
     }
 
-    public function paginate(int $perPage = 15, array $columns = ['*']): LengthAwarePaginator
+    public function paginate(int $perPage = 15, array $columns = ['*'], int $page = 1): LengthAwarePaginator
     {
-        return $this->repository()->paginate($perPage, $columns);
+        return $this->repository()->paginate($perPage, $columns, $page);
     }
 
     public function bulkCreate(array $attributes): Collection

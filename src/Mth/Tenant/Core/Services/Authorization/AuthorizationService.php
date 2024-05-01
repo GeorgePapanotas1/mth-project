@@ -3,7 +3,8 @@
 namespace Mth\Tenant\Core\Services\Authorization;
 
 use Mth\Tenant\Adapters\Models\User;
-use Mth\Tenant\Core\Dto\Forms\CreateRoleForm;
+use Mth\Tenant\Core\Constants\Enums\Role;
+use Mth\Tenant\Core\Dto\Authorization\Forms\CreateRoleForm;
 use Mth\Tenant\Core\Exceptions\Authorization\RoleCreationException;
 use Mth\Tenant\Core\Services\Internal\RoleCrudService;
 
@@ -71,5 +72,15 @@ class AuthorizationService
         string $roleName
     ): User {
         return $user->assignRole($roleName);
+    }
+
+    public function isAdmin(User $user): bool
+    {
+        return $this->userHasRole($user, Role::ADMIN);
+    }
+
+    public function isModerator(User $user): bool
+    {
+        return $this->userHasRole($user, Role::MODERATOR);
     }
 }

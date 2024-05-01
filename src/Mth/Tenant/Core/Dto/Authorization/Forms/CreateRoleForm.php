@@ -1,6 +1,6 @@
 <?php
 
-namespace Mth\Tenant\Core\Dto\Forms;
+namespace Mth\Tenant\Core\Dto\Authorization\Forms;
 
 use Mth\Common\Core\Utils\ArraySerializable;
 
@@ -13,9 +13,11 @@ class CreateRoleForm extends ArraySerializable
         return $this->name;
     }
 
-    public function setName(string $name): void
+    public function setName(string $name): CreateRoleForm
     {
         $this->name = $name;
+
+        return $this;
     }
 
     public function serialize(): array

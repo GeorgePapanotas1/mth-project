@@ -5,7 +5,7 @@ namespace Mth\Tenant\Core\Services\Internal;
 use Mth\Common\Core\Contracts\ICrudRepository;
 use Mth\Common\Core\Services\Internal\AbstractCrudService;
 use Mth\Tenant\Adapters\Models\Role;
-use Mth\Tenant\Core\Dto\Forms\CreateRoleForm;
+use Mth\Tenant\Core\Dto\Authorization\Forms\CreateRoleForm;
 use Mth\Tenant\Core\Exceptions\Authorization\RoleCreationException;
 use Mth\Tenant\Core\Repositories\Crud\RoleCrudRepository;
 

@@ -14,7 +14,21 @@ class RoleFactory extends Factory
     {
         return [
             RoleColumns::NAME       => fake()->title,
-            RoleColumns::GUARD_NAME => fake()->title
+            RoleColumns::GUARD_NAME => 'web'
         ];
+    }
+
+    public function name(string $name): self
+    {
+        return $this->state(function (array $attributes) use ($name) {
+            return [RoleColumns::NAME => $name];
+        });
+    }
+
+    public function guardName(string $name): self
+    {
+        return $this->state(function (array $attributes) use ($name) {
+            return [RoleColumns::GUARD_NAME => $name];
+        });
     }
 }

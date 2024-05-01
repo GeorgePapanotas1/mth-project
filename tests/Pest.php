@@ -13,6 +13,11 @@
 
 use Illuminate\Support\Facades\Hash;
 use Mth\Common\Core\Contracts\ICrudService;
+use Mth\Tenant\Adapters\Models\User;
+use Mth\Tenant\Core\Dto\Authorization\Forms\CreateRoleForm;
+use Mth\Tenant\Core\Services\Authorization\AuthorizationService;
+use Mth\Tenant\Core\Services\CompanyService;
+use Mth\Tenant\Core\Services\UserService;
 
 uses(
     Tests\TestCase::class,
@@ -29,7 +34,6 @@ uses(
 |
 */
 
-
 /*
 |--------------------------------------------------------------------------
 | Functions
@@ -40,7 +44,6 @@ uses(
 | global functions to help you to reduce the number of lines of code in your test files.
 |
 */
-
 
 function something()
 {
@@ -63,14 +66,14 @@ function testBasicCrudOperations(string $modelClass, ICrudService $service): voi
     });
 
     test('retrieves a model by id', function () use ($modelClass, $service) {
-        $model = $modelClass::factory()->create();
+        $model      = $modelClass::factory()->create();
         $foundModel = $service->find($model->id);
         expect($foundModel)->toBeInstanceOf($modelClass)
                            ->and($foundModel->id)->toEqual($model->id);
     });
 
     test('updates a model', function () use ($modelClass, $service) {
-        $model = $modelClass::factory()->create();
+        $model      = $modelClass::factory()->create();
         $updateData = $modelClass::factory()->make()->toArray();
 
         if (isUserClass($modelClass)) {
@@ -101,4 +104,32 @@ function testBasicCrudOperations(string $modelClass, ICrudService $service): voi
 function isUserClass(string $modelClass): bool
 {
     return $modelClass === 'Mth\Tenant\Adapters\Models\User';
+}
+
+function getUserService(): UserService
+{
+    return app()->get(UserService::class);
+}
+
+function getAuthorizationService(): AuthorizationService
+{
+    return app()->get(AuthorizationService::class);
+}
+
+function getCompanyService(): CompanyService
+{
+    return app()->get(CompanyService::class);
+}
+
+function createUserAndAssignRole(string $role): User
+{
+    $authorizationService = getAuthorizationService();
+
+    $authorizationService->createRole((new CreateRoleForm())->setName($role));
+
+    $user = User::factory()->create();
+
+    $authorizationService->assignRole($user, $role);
+
+    return $user;
 }
