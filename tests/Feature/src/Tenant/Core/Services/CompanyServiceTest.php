@@ -71,7 +71,7 @@ test('it updates a company', function () {
 
     $updatedCompany = $companyService->update($user, $updateCompanyDto);
 
-    testCompanyUpdate($newCompany->id, $updatedCompany, $updateCompanyDto);
+    testCompanyUpdate($newCompany->id, $updatedCompany, $newCompany, $updateCompanyDto);
 });
 
 test('it throws unauthorized exception on update', function () {
@@ -248,11 +248,11 @@ function testCompanyCreation(Company $company, CreateCompanyForm $companyForm): 
         ->and($company->address)->toEqual($companyForm->getAddress());
 }
 
-function testCompanyUpdate(string $oldCompanyId, Company $company, UpdateCompanyForm $companyForm): void
+function testCompanyUpdate(string $oldCompanyId, Company $company, Company $oldCompany, UpdateCompanyForm $companyForm): void
 {
     expect($company)
         ->toBeInstanceOf(Company::class)
         ->and($company->id)->toBeString($oldCompanyId)
-        ->and($company->name)->toEqual($companyForm->getName())
-        ->and($company->address)->toEqual($companyForm->getAddress());
+        ->and($company->name)->toEqual($companyForm->getName() ?? $oldCompany->name)
+        ->and($company->address)->toEqual($companyForm->getAddress() ?? $oldCompany->address);
 }

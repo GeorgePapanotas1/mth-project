@@ -20,7 +20,7 @@ class ProjectCrudService extends AbstractCrudService
         return $this->projectCrudRepository;
     }
 
-    public function getProjectsOfUserAndCompanies(
+    public function getProjectsOfUserAndAssociatedCompanies(
         User $user
     ): array {
         $user->load('projects', 'companies.projects');

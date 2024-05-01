@@ -39,7 +39,7 @@ readonly class ProjectService
         if ($this->authorizationService->isAdmin($user)) {
             return $this->projectCrudService->all()->toArray();
         } elseif ($this->authorizationService->isModerator($user)) {
-            return $this->projectCrudService->getProjectsOfUserAndCompanies($user);
+            return $this->projectCrudService->getProjectsOfUserAndAssociatedCompanies($user);
         } else {
             return $this->projectCrudService->getUserProjects($user);
         }
