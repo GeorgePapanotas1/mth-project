@@ -1,12 +1,12 @@
 <?php
 
+use Mth\Tenant\Adapters\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
-use Mth\Tenant\Adapters\Models\User;
 
 new #[Layout('layouts.guest')] class extends Component {
     public string $name = '';

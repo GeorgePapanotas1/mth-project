@@ -5,6 +5,7 @@ use Illuminate\Events\CallQueuedListener;
 use Illuminate\Mail\SendQueuedMailable;
 use Illuminate\Notifications\SendQueuedNotifications;
 use Illuminate\Queue\CallQueuedClosure;
+use Mth\Landlord\Adapters\Tenancy\MyDomainTenantFinder;
 use Spatie\Multitenancy\Actions\ForgetCurrentTenantAction;
 use Spatie\Multitenancy\Actions\MakeQueueTenantAwareAction;
 use Spatie\Multitenancy\Actions\MakeTenantCurrentAction;
@@ -19,7 +20,7 @@ return [
      * This class should extend `Spatie\Multitenancy\TenantFinder\TenantFinder`
      *
      */
-    'tenant_finder'                      => null,
+    'tenant_finder'                      => MyDomainTenantFinder::class,
 
     /*
      * These fields are used by tenant:artisan command to match one or more tenant.

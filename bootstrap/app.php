@@ -12,7 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
                       health: '/up',
                   )
                   ->withMiddleware(function (Middleware $middleware) {
-                      Route::middlewareGroup('tenant', [
+                      $middleware->appendToGroup('tenant', [
                           \Spatie\Multitenancy\Http\Middleware\NeedsTenant::class,
                           \Spatie\Multitenancy\Http\Middleware\EnsureValidTenantSession::class,
                       ]);
@@ -23,3 +23,4 @@ return Application::configure(basePath: dirname(__DIR__))
                   ->withExceptions(function (Exceptions $exceptions) {
                       //
                   })->create();
+
