@@ -13,4 +13,9 @@ class TenantCrudRepository extends BaseCrudRepository implements ICrudRepository
     {
         return new Tenant;
     }
+
+    public function getTenantWithDomain(string $domain): ?Tenant
+    {
+        return $this->getModel()::whereDomain($domain)->first();
+    }
 }
