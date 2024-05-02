@@ -13,6 +13,7 @@ class MyDomainTenantFinder extends TenantFinder
 
     public function findForRequest(Request $request): ?Tenant
     {
+
         $host = $request->getHost();
 
         $domain = explode('.', $host)[0];
@@ -22,6 +23,7 @@ class MyDomainTenantFinder extends TenantFinder
         if ($tenant) {
             return $tenant;
         }
-        abort(404);
+
+        return null;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Mth\Landlord\Core\Services;
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Mth\Landlord\Adapters\Models\Tenant;
@@ -62,5 +63,12 @@ readonly class TenancyService
 
             throw new GeneralTenantCreationException("Failed to create tenant: " . $t->getMessage());
         }
+    }
+
+    public function getTenantsPaginated(
+        int $perPage = 15,
+        ?int $page = null
+    ): LengthAwarePaginator {
+        return $this->tenantCrudRepository->paginate($perPage, ['*'], 'page', $page);
     }
 }
