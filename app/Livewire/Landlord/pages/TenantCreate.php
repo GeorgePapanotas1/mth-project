@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Livewire\Landlord;
+namespace App\Livewire\Landlord\pages;
 
-use Illuminate\Support\Str;
 use Livewire\Component;
 use Mth\Common\Constants\NamedRoutes;
 use Mth\Landlord\Core\Dto\Forms\CreateTenantForm;
@@ -29,7 +28,7 @@ class TenantCreate extends Component
 
         $tenantForm = (new CreateTenantForm())
             ->setName($this->name)
-            ->setDomain(Str::lower($this->domain));
+            ->setDomain($this->domain);
         try {
             $tenancyService->createTenant($tenantForm);
 

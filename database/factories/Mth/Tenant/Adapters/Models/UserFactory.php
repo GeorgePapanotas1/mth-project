@@ -39,4 +39,11 @@ class UserFactory extends Factory
             UserColumns::EMAIL_VERIFIED_AT => null,
         ]);
     }
+
+    public function withPassword(string $password): static
+    {
+        return $this->state(fn (array $attributes) => [
+            UserColumns::PASSWORD => Hash::make($password),
+        ]);
+    }
 }

@@ -3,6 +3,7 @@
 namespace Mth\Tenant\Core\Services;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Mth\Tenant\Adapters\Models\User;
 use Mth\Tenant\Core\Dto\User\Forms\CreateUserForm;
 use Mth\Tenant\Core\Dto\User\Forms\UpdateUserForm;
@@ -57,8 +58,8 @@ readonly class UserService
 
     public function getUsers(
         int $perPage = 15,
-        int $page = 1
-    ): array {
-        return $this->userCrudService->paginate($perPage, ['*'], $page)->items();
+        ?int $page = null
+    ): LengthAwarePaginator {
+        return $this->userCrudService->paginate($perPage, ['*'], 'page', $page);
     }
 }

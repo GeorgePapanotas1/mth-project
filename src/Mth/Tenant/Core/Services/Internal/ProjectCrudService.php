@@ -2,6 +2,8 @@
 
 namespace Mth\Tenant\Core\Services\Internal;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Mth\Common\Core\Contracts\ICrudRepository;
 use Mth\Common\Core\Services\Internal\AbstractCrudService;
 use Mth\Tenant\Adapters\Models\User;
@@ -22,7 +24,7 @@ class ProjectCrudService extends AbstractCrudService
 
     public function getProjectsOfUserAndAssociatedCompanies(
         User $user
-    ): array {
+    ): Collection {
         $user->load('projects', 'companies.projects');
         $userProjects = $user->projects;
 
@@ -30,12 +32,17 @@ class ProjectCrudService extends AbstractCrudService
             return $company->projects;
         });
 
-        return $userProjects->merge($companyProjects)->unique('id')->toArray();
+        return $userProjects->merge($companyProjects)->unique('id');
+    }
+
+    public function paginated(Collection $collection, int $perPage, int $page = null): LengthAwarePaginator
+    {
+        return new LengthAwarePaginator($collection, count($collection), $perPage, $page);
     }
 
     public function getUserProjects(
         User $user
-    ): array {
-        return $user->load('projects')->projects->toArray();
+    ): Collection {
+        return $user->load('projects')->projects;
     }
 }

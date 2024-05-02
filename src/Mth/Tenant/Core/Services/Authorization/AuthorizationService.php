@@ -8,10 +8,10 @@ use Mth\Tenant\Core\Dto\Authorization\Forms\CreateRoleForm;
 use Mth\Tenant\Core\Exceptions\Authorization\RoleCreationException;
 use Mth\Tenant\Core\Services\Internal\RoleCrudService;
 
-class AuthorizationService
+readonly class AuthorizationService
 {
     public function __construct(
-        protected readonly RoleCrudService $roleCrudService
+        protected RoleCrudService $roleCrudService
     ) {
 
     }

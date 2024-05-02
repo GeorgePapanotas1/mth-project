@@ -2,6 +2,7 @@
 
 namespace Mth\Tenant\Core\Services\Internal;
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use Mth\Common\Core\Contracts\ICrudRepository;
 use Mth\Common\Core\Services\Internal\AbstractCrudService;
 use Mth\Tenant\Adapters\Models\Company;
@@ -49,20 +50,20 @@ class CompanyCrudService extends AbstractCrudService
 
     public function getCompanies(
         int $perPage,
-        int $page
-    ): array {
-        return $this->paginate($perPage, ['*'], $page)->items();
+        ?int $page = null
+    ): LengthAwarePaginator {
+        return $this->paginate($perPage, ['*'], 'page', $page);
     }
 
     public function getCompaniesOfUserPaginated(
         User $user,
         int $perPage,
-        int $page
-    ): array {
+        ?int $page = null
+    ): LengthAwarePaginator {
 
         return $user->load('companies')
                     ->companies()
-                    ->paginate($perPage, ['*'], $page)->items();
+                    ->paginate($perPage, ['*'], 'page', $page);
     }
 
     public function getCompaniesOfUser(

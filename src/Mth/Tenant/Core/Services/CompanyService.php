@@ -3,6 +3,7 @@
 namespace Mth\Tenant\Core\Services;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Mth\Tenant\Adapters\Models\Company;
 use Mth\Tenant\Adapters\Models\User;
 use Mth\Tenant\Core\Constants\Enums\Role;
@@ -79,8 +80,8 @@ readonly class CompanyService
     public function getCompanies(
         User $user,
         int $perPage = 15,
-        int $page = 1
-    ): array {
+        ?int $page = null
+    ): LengthAwarePaginator {
 
         if ($this->authorizationService->isAdmin($user)) {
             return $this->crudService->getCompanies($perPage, $page);

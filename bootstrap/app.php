@@ -16,6 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
                           \Spatie\Multitenancy\Http\Middleware\NeedsTenant::class,
                           \Spatie\Multitenancy\Http\Middleware\EnsureValidTenantSession::class,
                       ]);
+
+                      $middleware->alias([
+                          'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+                      ]);
                   })
                   ->withCommands([
                       \Mth\Landlord\Adapters\Commands\CreateTenant::class
