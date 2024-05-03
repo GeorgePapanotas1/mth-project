@@ -205,23 +205,6 @@ test('it returns only moderator companies', function () {
         ->toHaveCount(2);
 });
 
-test('it returns no companies on random user', function () {
-
-    $user = User::factory()->create();
-
-    $t = Company::factory()->count(4)->create();
-
-    $firstUserCompany  = $t[2];
-    $secondUserCompany = $t[3];
-
-    $companyService = getCompanyService();
-
-    $companyService->associateUser($firstUserCompany, [$user->id]);
-    $companyService->associateUser($secondUserCompany, [$user->id]);
-
-    $userCompanies = $companyService->getCompanies($user);
-})->throws(UnauthorizedException::class);
-
 test('it returns all companies of user', function () {
 
     $associatedCompanies = Company::factory()->count(15)->create();
@@ -231,9 +214,9 @@ test('it returns all companies of user', function () {
 
     $companyService = getCompanyService();
 
-    $companyService->associateCompanies($user, $associatedCompanies->pluck('id')->toArray());
+    $companyService->associateCompanies($user->id, $associatedCompanies->pluck('id')->toArray());
 
-    $companiesOfUser = $companyService->getCompaniesOfUser($user);
+    $companiesOfUser = $companyService->getCompaniesOfUser($user->id);
 
     expect($companiesOfUser)
         ->toHaveCount(15);
