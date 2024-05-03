@@ -18,7 +18,8 @@ return Application::configure(basePath: dirname(__DIR__))
                       ]);
 
                       $middleware->alias([
-                          'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+                          'role'     => \Spatie\Permission\Middleware\RoleMiddleware::class,
+                          'landlord' => \App\Http\Middleware\LandlordOnly::class
                       ]);
                   })
                   ->withCommands([

@@ -4,9 +4,12 @@ namespace Mth\Tenant\Core\Services;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Mth\Common\Constants\NamedRoutes;
+use Mth\Common\Helpers\UuidHelper;
 use Mth\Tenant\Adapters\Models\User;
 use Mth\Tenant\Core\Dto\User\Forms\CreateUserForm;
 use Mth\Tenant\Core\Dto\User\Forms\UpdateUserForm;
+use Mth\Tenant\Core\Dto\User\Projections\UserProjection;
 use Mth\Tenant\Core\Exceptions\Authorization\UnauthorizedException;
 use Mth\Tenant\Core\Services\Authorization\AuthorizationService;
 use Mth\Tenant\Core\Services\Internal\UserCrudService;
@@ -56,10 +59,33 @@ readonly class UserService
         return $this->userCrudService->delete($userId);
     }
 
+    public function find(string $userId): ?UserProjection
+    {
+        /* @var User|null $user */
+        $user = $this->userCrudService->find($userId);
+
+        return $user ? (new UserProjection())
+            ->setName($user->name)
+            ->setEmail($user->email)
+            ->setId(UuidHelper::uuidToBase62($user->id))
+            ->setRole($this->authorizationService->getUserRole($user)) : null;
+    }
+
     public function getUsers(
         int $perPage = 15,
         ?int $page = null
     ): LengthAwarePaginator {
-        return $this->userCrudService->paginate($perPage, ['*'], 'page', $page);
+        $users = $this->userCrudService->paginate($perPage, ['*'], 'page', $page);
+
+        $projections = array_map(function (User $user) {
+            return (new UserProjection())
+                ->setId(UuidHelper::uuidToBase62($user->id))
+                ->setName($user->name)
+                ->setEmail($user->email)
+                ->setRole($this->authorizationService->getUserRole($user))
+                ->setIsAdmin($this->authorizationService->isAdmin($user));
+        }, $users->items());
+
+        return new LengthAwarePaginator($projections, $users->total(), $perPage, $page, ['path' => url(NamedRoutes::USERS)]);
     }
 }

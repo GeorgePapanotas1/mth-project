@@ -4,9 +4,13 @@ namespace Mth\Tenant\Core\Services;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Mth\Common\Constants\NamedRoutes;
+use Mth\Common\Helpers\UuidHelper;
+use Mth\Tenant\Adapters\Models\Project;
 use Mth\Tenant\Adapters\Models\User;
 use Mth\Tenant\Core\Dto\Project\Forms\CreateProjectForm;
 use Mth\Tenant\Core\Dto\Project\Forms\UpdateProjectForm;
+use Mth\Tenant\Core\Dto\Project\Projections\ProjectProjection;
 use Mth\Tenant\Core\Services\Authorization\AuthorizationService;
 use Mth\Tenant\Core\Services\Internal\ProjectCrudService;
 
@@ -17,6 +21,19 @@ readonly class ProjectService
         protected AuthorizationService $authorizationService
     ) {
 
+    }
+
+    public function find(string $projectId): ?ProjectProjection
+    {
+        /* @var Project|null $project */
+        $project = $this->projectCrudService->find($projectId);
+
+        return $project ? (new ProjectProjection())
+            ->setName($project->name)
+            ->setId(UuidHelper::uuidToBase62($project->id))
+            ->setDescription($project->description)
+            ->setCompany(UuidHelper::uuidToBase62($project->company_id))
+            ->setCreator(UuidHelper::uuidToBase62($project->creator_id)) : null;
     }
 
     public function create(CreateProjectForm $createProjectForm): Model
@@ -52,11 +69,23 @@ readonly class ProjectService
         ?int $page = null
     ): LengthAwarePaginator {
         if ($this->authorizationService->isAdmin($user)) {
-            return $this->projectCrudService->paginate($perPage, ['*'], 'page', $page);
+            $projects = $this->projectCrudService->paginated($this->projectCrudService->allWithRelations(), $perPage, $page);
         } elseif ($this->authorizationService->isModerator($user)) {
-            return $this->projectCrudService->paginated($this->projectCrudService->getProjectsOfUserAndAssociatedCompanies($user), $perPage, $page);
+            $projects = $this->projectCrudService->paginated($this->projectCrudService->getProjectsOfUserAndAssociatedCompanies($user), $perPage, $page);
         } else {
-            return $this->projectCrudService->paginated($this->projectCrudService->getUserProjects($user), $perPage, $perPage);
+            $projects = $this->projectCrudService->paginated($this->projectCrudService->getUserProjects($user), $perPage, $page);
         }
+
+        $projections = array_map(function (Project $project) {
+
+            return (new ProjectProjection())
+                ->setId(UuidHelper::uuidToBase62($project->id))
+                ->setName($project->name)
+                ->setDescription($project->description)
+                ->setCreator($project->creator->name)
+                ->setCompany($project->company->name);
+        }, $projects->items());
+
+        return new LengthAwarePaginator($projections, count($projects), $perPage, $page, ['path' => url(NamedRoutes::PROJECTS)]);
     }
 }

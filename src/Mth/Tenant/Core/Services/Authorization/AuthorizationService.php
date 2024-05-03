@@ -71,7 +71,7 @@ readonly class AuthorizationService
         User $user,
         string $roleName
     ): User {
-        return $user->assignRole($roleName);
+        return $user->syncRoles($roleName);
     }
 
     public function isAdmin(User $user): bool
@@ -82,5 +82,15 @@ readonly class AuthorizationService
     public function isModerator(User $user): bool
     {
         return $this->userHasRole($user, Role::MODERATOR);
+    }
+
+    public function listRoles(): array
+    {
+        return $this->roleCrudService->all()->pluck('name')->toArray();
+    }
+
+    public function getUserRole(User $user): string
+    {
+        return $user->load('roles')->getRoleNames()->first() ?? '';
     }
 }

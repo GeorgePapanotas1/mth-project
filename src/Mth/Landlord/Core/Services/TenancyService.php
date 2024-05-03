@@ -107,12 +107,17 @@ readonly class TenancyService
             $this->authorizationService->assignRole($user, Role::ADMIN);
 
             event(new Registered($user));
-            
+
             $newTenant->forgetCurrent();
 
             return $newTenant;
         }
 
         return null;
+    }
+
+    public function checkCurrent(): ?Tenant
+    {
+        return $this->tenantCrudRepository->checkCurrent();
     }
 }

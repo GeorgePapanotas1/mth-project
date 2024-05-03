@@ -30,7 +30,7 @@ new #[Layout('layouts.guest')] class extends Component {
         TenantCrudService $tenantCrudService,
         \Mth\Tenant\Core\Services\UserService $userService
     ): void {
-
+        
         $this->domain = strtolower(trim(preg_replace('/\s+/', '', $this->domain)));
 
         $validated = $this->validate([

@@ -2,6 +2,7 @@
 
 namespace Mth\Tenant\Core\Repositories\Crud;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Mth\Common\Core\Contracts\ICrudRepository;
 use Mth\Common\Core\Repositories\BaseCrudRepository;
@@ -12,5 +13,10 @@ class ProjectCrudRepository extends BaseCrudRepository implements ICrudRepositor
     protected function getModel(): Model
     {
         return new Project();
+    }
+
+    public function allWithRelations(): ?Collection
+    {
+        return $this->getModel()->with(['creator', 'company'])->get();
     }
 }

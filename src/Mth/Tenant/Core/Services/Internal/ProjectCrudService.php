@@ -22,10 +22,15 @@ class ProjectCrudService extends AbstractCrudService
         return $this->projectCrudRepository;
     }
 
+    public function allWithRelations(): ?Collection
+    {
+        return $this->projectCrudRepository->allWithRelations();
+    }
+
     public function getProjectsOfUserAndAssociatedCompanies(
         User $user
     ): Collection {
-        $user->load('projects', 'companies.projects');
+        $user->load('projects.creator', 'projects.company', 'companies.projects.creator', 'companies.projects.company');
         $userProjects = $user->projects;
 
         $companyProjects = $user->companies->flatMap(function ($company) {
@@ -43,6 +48,6 @@ class ProjectCrudService extends AbstractCrudService
     public function getUserProjects(
         User $user
     ): Collection {
-        return $user->load('projects')->projects;
+        return $user->load(['projects.creator', 'projects.company'])->projects;
     }
 }

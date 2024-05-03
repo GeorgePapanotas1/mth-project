@@ -2,6 +2,7 @@
 
 namespace Mth\Tenant\Core\Services\Internal;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Mth\Common\Core\Contracts\ICrudRepository;
 use Mth\Common\Core\Services\Internal\AbstractCrudService;
@@ -37,15 +38,23 @@ class CompanyCrudService extends AbstractCrudService
     }
 
     public function associateCompanies(
-        User $user,
+        string $userId,
         ?array $companyIds,
         bool $withoutDetach = true
     ): array {
-        if ($withoutDetach) {
-            return $user->companies()->syncWithoutDetaching($companyIds);
+
+        /* @var User $user */
+        $user = $this->userCrudService->find($userId);
+
+        if ($user) {
+            if ($withoutDetach) {
+                return $user->companies()->syncWithoutDetaching($companyIds);
+            }
+
+            return $user->companies()->sync($companyIds);
         }
 
-        return $user->companies()->sync($companyIds);
+        return [];
     }
 
     public function getCompanies(
@@ -67,10 +76,12 @@ class CompanyCrudService extends AbstractCrudService
     }
 
     public function getCompaniesOfUser(
-        User $user
-    ): array {
+        string $userId
+    ): Collection {
+        /*  @var User $user */
+        $user = $this->userCrudService->find($userId);
+
         return $user->load('companies')
-                    ->companies()
-                    ->get()->toArray();
+            ->companies;
     }
 }
