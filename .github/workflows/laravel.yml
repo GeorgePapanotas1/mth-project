@@ -38,6 +38,7 @@ jobs:
       - name: Copy .env
         run: |
           cp .env.ci .env
+          cp .env.testing.ci .env.testing
 
       - name: Install Dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
