@@ -46,4 +46,11 @@ class UserFactory extends Factory
             UserColumns::PASSWORD => Hash::make($password),
         ]);
     }
+
+    public function withEmail(string $email): static
+    {
+        return $this->state(fn (array $attributes) => [
+            UserColumns::EMAIL => $email,
+        ]);
+    }
 }

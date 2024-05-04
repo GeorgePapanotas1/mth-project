@@ -2,8 +2,13 @@
 
 namespace Database\Seeders;
 
+use Database\Seeders\Landlord\SuperuserSeeder;
+use Database\Seeders\Landlord\TenantSeeder;
+use Database\Seeders\Tenant\CompanySeeder;
+use Database\Seeders\Tenant\ProjectSeeder;
+use Database\Seeders\Tenant\UserSeeder;
 use Illuminate\Database\Seeder;
-use Mth\Tenant\Adapters\Models\User;
+use Mth\Landlord\Adapters\Models\Tenant;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
@@ -14,11 +19,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        $this->call(SuperuserSeeder::class);
+        $this->call(TenantSeeder::class);
+
+        Tenant::all()->each(function ($tenant) {
+            $tenant->makeCurrent();
+            sleep(1);
+            $tenant->execute(function () {
+                $this->call([
+                    CompanySeeder::class,
+                    UserSeeder::class,
+                    ProjectSeeder::class,
+                ]);
+            });
+            $tenant->forgetCurrent();
+        });
     }
 }

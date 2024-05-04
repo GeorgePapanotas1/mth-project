@@ -40,8 +40,6 @@ readonly class TenancyService
         try {
             $this->tenancyRepository->createTenantDatabase($createTenantForm->getDatabase());
 
-            DB::beginTransaction();
-
             /* @var Tenant $tenant */
             $tenant = $this->tenantCrudRepository->create($createTenantForm->toDatabaseArray());
 
@@ -61,10 +59,10 @@ readonly class TenancyService
 
             $tenant->forgetCurrent();
 
-            DB::commit();
-
             return true;
-        } catch (\Throwable $t) {
+        } catch (\Exception $t) {
+
+
             if (isset($tenant)) {
                 $tenant->forgetCurrent();
             }

@@ -1,66 +1,98 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Installation
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+1. Clone the repository
+2. Make setup.sh executable (chmod 777 setup.sh on unix systems)
+3. run setup.sh
 
-## About Laravel
+# Functional Requirements Documentation
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Overview
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+This document outlines the functional requirements for a multi-tenant application with a distinct separation between the
+landlord (management) app and tenant-specific apps. It includes detailed descriptions of entities such as Users,
+Companies, and Projects, along with specific roles and permissions.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Tenant App
 
-## Learning Laravel
+### Entities and Relationships
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+#### Users
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- Users are crucial entities with varying roles that define their permissions within the app.
+- They can belong to multiple companies.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+#### Companies
 
-## Laravel Sponsors
+- Companies are associated with multiple users.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+#### Projects
 
-### Premium Partners
+- Projects are linked to both a user (as an owner) and a company.
+- They define a collaborative scope between users and companies.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### User Roles and Permissions
 
-## Contributing
+#### Admin
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- **Permissions**:
+    - **CRUD operations on companies**.
+    - **View, create, update, and delete users**.
+    - **Create projects for any user associated with any company**.
+    - **View all projects in the application**.
 
-## Code of Conduct
+#### Moderator
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- **Permissions**:
+    - **View all users** (no CUD permissions).
+    - **Create projects for themselves with any associated company**.
+    - **View all projects related to their associated companies and their own projects**.
 
-## Security Vulnerabilities
+#### User (Basic Role)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- **Permissions**:
+    - **View their own profile**.
+    - **Create projects for themselves within the companies they are associated with**.
+    - **View only their own projects**.
 
-## License
+### Data Access
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- **All roles can view user profiles**, but only admins are endowed with the permissions to manage (create, update,
+  delete) these profiles.
+- **Project visibility and management permissions** are dictated by the user's role, ensuring proper data isolation and
+  security based on different access levels within the system.
+
+## Landlord App
+
+### User Registration and Tenant Creation
+
+- **User registration is exclusive at the landlord app. Tenant users are created by workspace admins.**
+- **Upon registration, a new tenant is automatically created, and the user is redirected to the tenant-specific route
+  within the tenant app.**
+
+### Super Admin Role
+
+- **A super admin can log in to the landlord app using the credentials (Email: superadmin@example.com,
+  Password: `password`).**
+- **The super admin has the ability to view a list of all tenants existing within the system.**
+- **The super admin can also create new tenants as needed.**
+
+## Usage
+
+Upon installation, the system is pre-configured with two tenants:
+
+- **Tenant A**: Accessible at `workspace_a.local`
+- **Tenant B**: Accessible at `workspace_b.local`
+
+### Credentials for Access
+
+Users can log into both tenants using the following credentials:
+
+- **Admin**:
+    - Email: admin@example.com
+    - Password: `password`
+- **Moderator**:
+    - Email: moderator@example.com
+    - Password: `password`
+- **User** (Basic Role):
+    - Email: user@example.com
+    - Password: `password`
