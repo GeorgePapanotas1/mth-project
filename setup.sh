@@ -17,4 +17,4 @@ docker run --rm \
 
 ./vendor/bin/sail artisan migrate --path=database/migrations/landlord
 
-./vendor/bin/sail db:seed
+./vendor/bin/sail artisan db:seed
