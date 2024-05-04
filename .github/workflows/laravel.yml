@@ -43,6 +43,8 @@ jobs:
           echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
           echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "TENANT_DB_USERNAME=sail" >> .env
+          echo "TENANT_DB_PASSWORD=password" >> .env
 
       - name: Install Dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
