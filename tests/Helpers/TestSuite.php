@@ -24,7 +24,7 @@ class TestSuite
 
     public static function cleanTenant(string $dbname): void
     {
-        DB::statement("DROP DATABASE $dbname");
+        DB::statement("DROP DATABASE IF EXISTS $dbname");
     }
 
     public static function cleanupTable(Model $model): void

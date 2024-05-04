@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\src\Tenant\Core\Services;
 
+use Faker\Core\Uuid;
 use Mth\Tenant\Adapters\Models\Company;
 use Mth\Tenant\Adapters\Models\Project;
 use Mth\Tenant\Adapters\Models\Role;
@@ -9,6 +10,7 @@ use Mth\Tenant\Adapters\Models\User;
 use Mth\Tenant\Adapters\Models\UsersCompanies;
 use Mth\Tenant\Core\Dto\Project\Forms\CreateProjectForm;
 use Mth\Tenant\Core\Dto\Project\Forms\UpdateProjectForm;
+use Mth\Tenant\Core\Dto\Project\Projections\ProjectProjection;
 use Tests\Helpers\TestSuite;
 
 beforeAll(function () {
@@ -108,6 +110,14 @@ test('It gets all projects for admin', function () {
     $adminProjects = $projectService->getProjects($admin);
 
     expect($adminProjects)->toHaveCount(8);
+
+    $adminProjectsPaginated = $projectService->getProjectsPaginated($admin, 3);
+
+    expect($adminProjectsPaginated->items())
+        ->toHaveCount(8)
+        ->and($adminProjectsPaginated->items()[0])
+        ->toBeInstanceOf(ProjectProjection::class);
+
 });
 
 test('it gets projects of moderator along with his companies', function () {
@@ -161,6 +171,13 @@ test('it gets projects of moderator along with his companies', function () {
     $modProjects = $projectService->getProjects($mod);
 
     expect($modProjects)->toHaveCount(8);
+
+    $modProjectPaginated = $projectService->getProjectsPaginated($mod, 3);
+
+    expect($modProjectPaginated->items())
+        ->toHaveCount(8)
+        ->and($modProjectPaginated->items()[0])
+        ->toBeInstanceOf(ProjectProjection::class);
 });
 
 test('it returns only user projects for normal user', function () {
@@ -204,6 +221,13 @@ test('it returns only user projects for normal user', function () {
     $modProjects = $projectService->getProjects($userOne);
 
     expect($modProjects)->toHaveCount(4);
+
+    $userProjectsPaginated = $projectService->getProjectsPaginated($userOne, 3);
+
+    expect($userProjectsPaginated->items())
+        ->toHaveCount(4)
+        ->and($userProjectsPaginated->items()[0])
+        ->toBeInstanceOf(ProjectProjection::class);
 });
 
 test('it returns proper projects', function () {
@@ -258,6 +282,32 @@ test('it returns proper projects', function () {
 
     $modProjects = $projectService->getProjects($mod);
     expect($modProjects)->toHaveCount(3);
+});
+
+
+test('find returns projection', function (){
+   $project = Project::factory()->create();
+
+   $projectService = getProjectService();
+
+   $projectProjection = $projectService->find($project->id);
+
+   expect($projectProjection)
+       ->not()
+       ->toBeNull()
+       ->and($projectProjection)
+       ->toBeInstanceOf(ProjectProjection::class);
+});
+
+test('find returns null', function (){
+    Project::factory()->create();
+
+    $projectService = getProjectService();
+
+    $projectProjection = $projectService->find('9bf656d2-e79a-403c-a46e-a78fef60cee6');
+
+    expect($projectProjection)
+        ->toBeNull();
 });
 
 beforeEach(function () {

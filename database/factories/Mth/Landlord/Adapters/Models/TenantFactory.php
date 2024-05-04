@@ -14,8 +14,8 @@ class TenantFactory extends Factory
     {
         return [
             'name' => $this->faker->company,
-            'domain' => $this->faker->domainName,
-            'database' => 'db_' . $this->faker->unique()->lexify('??????'),
+            'domain' => $this->faker->unique()->lexify('??????'),
+            'database' => 'tenant_' . $this->faker->unique()->lexify('??????'),
             'created_at' => now(),
             'updated_at' => now(),
         ];
