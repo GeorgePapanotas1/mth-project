@@ -39,7 +39,7 @@ jobs:
         run: |
           cp .env.example .env
           echo "DB_CONNECTION=pgsql" >> .env
-          echo "DB_HOST=localhost" >> .env
+          echo "DB_HOST=pgsql" >> .env
           echo "DB_PORT=5432" >> .env
           echo "DB_DATABASE=testing" >> .env
           echo "DB_USERNAME=sail" >> .env
@@ -54,7 +54,7 @@ jobs:
         run: php artisan key:generate
 
       - name: Run Migrations
-        run: php artisan migrate
+        run: php artisan migrate --path=database/migrations/landlord
 
       - name: Run Pest Tests on specific directory
         run: ./vendor/bin/pest --testsuite=Domain --coverage-clover=coverage.xml
