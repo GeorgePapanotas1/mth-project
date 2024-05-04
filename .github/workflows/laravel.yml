@@ -38,11 +38,11 @@ jobs:
         run: |
           cp .env.example .env
           echo "DB_CONNECTION=pgsql" >> .env
-          echo "DB_HOST=localhost" >> .env
+          echo "DB_HOST=pgsql" >> .env
           echo "DB_PORT=5432" >> .env
-          echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
-          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "DB_DATABASE=testing" >> .env
+          echo "DB_USERNAME=sail" >> .env
+          echo "DB_PASSWORD=password" >> .env
           echo "TENANT_DB_USERNAME=sail" >> .env
           echo "TENANT_DB_PASSWORD=password" >> .env
 
