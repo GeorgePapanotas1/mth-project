@@ -1,16 +1,10 @@
 # Installation
 
 1. Clone the repository
-2. Make setup.sh executable (chmod +x setup.sh on unix systems)
+2. Make setup.sh executable (`chmod +x` setup.sh on unix systems)
 3. run setup.sh
 
 # Functional Requirements Documentation
-
-## Overview
-
-This document outlines the functional requirements for a multi-tenant application with a distinct separation between the
-landlord (management) app and tenant-specific apps. It includes detailed descriptions of entities such as Users,
-Companies, and Projects, along with specific roles and permissions.
 
 ## Tenant App
 
@@ -27,8 +21,7 @@ Companies, and Projects, along with specific roles and permissions.
 
 #### Projects
 
-- Projects are linked to both a user (as an owner) and a company.
-- They define a collaborative scope between users and companies.
+- Projects are linked to both a user (as creator) and a company.
 
 ### User Roles and Permissions
 
@@ -43,14 +36,14 @@ Companies, and Projects, along with specific roles and permissions.
 #### Moderator
 
 - **Permissions**:
-    - **View all users** (no CUD permissions).
+    - **View all users but cannot delete, create or edit**.
     - **Create projects for themselves with any associated company**.
-    - **View all projects related to their associated companies and their own projects**.
+    - **View their own projects and all projects related to their associated companies**.
 
 #### User (Basic Role)
 
 - **Permissions**:
-    - **View their own profile**.
+    - **View all users but cannot edit, create or delete.**.
     - **Create projects for themselves within the companies they are associated with**.
     - **View only their own projects**.
 
@@ -66,8 +59,11 @@ Companies, and Projects, along with specific roles and permissions.
 ### User Registration and Tenant Creation
 
 - **User registration is exclusive at the landlord app. Tenant users are created by workspace admins.**
-- **Upon registration, a new tenant is automatically created, and the user is redirected to the tenant-specific route
-  within the tenant app.**
+    - **The `/register` route is disabled for tenant domains and result in a 404 page. It's only enabled in the landlord
+      app and acts as a tenant registration form**.
+    - **Upon registration, a new tenant is automatically created, and the user is redirected to the tenant-specific
+      route
+      within the tenant app.**
 
 ### Super Admin Role
 
@@ -96,3 +92,73 @@ Users can log into both tenants using the following credentials:
 - **User** (Basic Role):
     - Email: user@example.com
     - Password: `password`
+
+## Packages Used
+
+- **Spatie Multi-Tenancy**
+- **Livewire**
+- **Spatie Permissions**
+- **Tuupola Base62**
+- **Laravel Pest**
+
+## Architecture overview
+
+Whilst this is a Laravel app, the core business logic is seperated and moved into src/Mth directory.
+In this directory, I have separated the code based on the different contexts.
+
+- **Common**: Common classes and utilities that are helpful across the app.
+    - **Config**: A module to interact with the Laravel config.
+    - **Constants**: Enum files with various constants of the app.
+    - **Container**: Exposed facade to interact with Laravel's `app()` container.
+    - **Helpers**: A set of helpers like UuidHelper that transforms a Uuid on a base62 string and vise versa.
+    - **Core**: Core classes that are used by the other modules on a polymorphic manner.
+        - ICrudRepository: Base contract of a CRUD repository. Establishes a set of common CRUD functions.
+        - ICrudService: Base contract of a CRUD Service layer. Establishes a set of common CRUD functions.
+        - BaseCrudRepository: Abstract implementation of ICrudRepository. Forces the user to implement a getModel()
+          function that returns an eloquent model and acts as the entrypoint for all query builders.
+        - AbstractCrudService: Abstract implementation of ICrudService. Uses the ICrudRepository dependency to perform
+          common CRUD functions.
+
+Using the BaseCrudRepository and AbstractCrudService any model Crud Repo & Service comes pre-configures with a varing
+set of function that are reusable.
+
+- **Landlord / Tenant**: These are the basic domain modules. Each of these can potentially be broken down by more
+  domains.
+- Each domain is seperated by concern or layer.
+    - **Adapters**: The name is derived from the Hexagonal Architecture. Adapters include Driver and Driver adapters.
+      Driver
+      adapters are the entry points of the app like HTTP, Commands, Jobs and any other utility that can execute BL code.
+      Driver adapters are the output ports. You can find more
+      info [here](https://medium.com/idealo-tech-blog/hexagonal-ports-adapters-architecture-e3617bcf00a0). On our case,
+      Adapters include any Laravel specific entrypoint like HTTP Controller, Command etc. and the basic Driven adapter
+      that is Eloquent models.
+    - **Core**: Core module includes only business logic layers and its forbidden to use any Laravel specific class.
+      It's purpose is to be easily reusable and decoupled from the framework.
+
+### Core Modules overview
+
+Core module contains the following directories:
+
+- Constants: Constants and enums dependant to the bounded context
+- DTO: DT Objects for cross class data access. I separate my DTOs by action:
+    - Forms: Input DTO used to store or update an entity.
+    - Queries: Input DTO used to query an entity. Think filters.
+    - Projections: Output DTO used to pass an entity from the final BL layer to the Driver as a response.
+    - Presenters: Output DTO used to present an entity - Omitted for this project - useful on HATEOAS / HAL based
+      architectures.
+- Exceptions: Bounded-context specific exceptions.
+- Repository: DAO for the entities of the context.
+- Services: Business logic services and layers.
+    - CrudServices: Services that are responsible for Data access.
+    - Authorization: On more complex scenarios, they are responsible for authorising actions.
+    - Services: The uppermost context layer. This layer is the one that Driving Adapters use and consolidates business
+      logic actions.
+
+On a real-world scenario the core module would also be extended to include items like:
+
+- Facades
+- Factories
+- Adapters
+- Decorators
+- Domain / Models
+- more business logic specific item.
