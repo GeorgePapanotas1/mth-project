@@ -3,6 +3,8 @@
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Mth\Common\Core\Contracts\ICrudService;
+use Mth\Landlord\Core\Services\Internal\TenantCrudService;
+use Mth\Landlord\Core\Services\TenancyService;
 use Mth\Tenant\Adapters\Models\User;
 use Mth\Tenant\Core\Dto\Authorization\Forms\CreateRoleForm;
 use Mth\Tenant\Core\Services\Authorization\AuthorizationService;
@@ -22,7 +24,7 @@ use Tests\TestCase;
 |
 */
 
-uses(TestCase::class, RefreshDatabase::class)->in('Feature');
+uses(TestCase::class)->in('Feature');
 
 /*
 |--------------------------------------------------------------------------
@@ -45,11 +47,6 @@ uses(TestCase::class, RefreshDatabase::class)->in('Feature');
 | global functions to help you to reduce the number of lines of code in your test files.
 |
 */
-
-function something()
-{
-    // ..
-}
 
 function testBasicCrudOperations(string $modelClass, ICrudService $service): void
 {
@@ -125,6 +122,16 @@ function getCompanyService(): CompanyService
 function getProjectService(): ProjectService
 {
     return app()->get(ProjectService::class);
+}
+
+function getTenantCrudService(): TenantCrudService
+{
+    return app()->get(TenantCrudService::class);
+}
+
+function getTenancyService(): TenancyService
+{
+    return app()->get(TenancyService::class);
 }
 
 function createUserAndAssignRole(string $role): User

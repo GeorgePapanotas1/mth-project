@@ -1,5 +1,6 @@
 services:
     laravel.test:
+        container_name: app
         build:
             context: ./vendor/laravel/sail/runtimes/8.3
             dockerfile: Dockerfile
@@ -26,6 +27,7 @@ services:
             - redis
             - mailpit
     pgsql:
+        container_name: db
         image: 'postgres:15'
         ports:
             - '${FORWARD_DB_PORT:-5432}:5432'
@@ -51,6 +53,7 @@ services:
             retries: 3
             timeout: 5s
     redis:
+        container_name: cache
         image: 'redis:alpine'
         ports:
             - '${FORWARD_REDIS_PORT:-6379}:6379'
@@ -66,6 +69,7 @@ services:
             retries: 3
             timeout: 5s
     mailpit:
+        container_name: mail
         image: 'axllent/mailpit:latest'
         ports:
             - '${FORWARD_MAILPIT_PORT:-1025}:1025'

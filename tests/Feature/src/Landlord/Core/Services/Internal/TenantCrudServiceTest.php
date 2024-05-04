@@ -16,6 +16,20 @@ beforeEach(function () {
 
 testBasicCrudOperations(Tenant::class, app()->make(TenantCrudService::class));
 
+test('it fetches a tenant by its domain', function () {
+    Tenant::factory()->domain('testdomain')->create();
+
+    $tenancyService = getTenantCrudService();
+
+    $tenant = $tenancyService->getTenantWithDomain('testdomain');
+
+    expect($tenant)
+        ->not()
+        ->toBeNull()
+        ->and($tenant)
+        ->toBeInstanceOf(Tenant::class);
+});
+
 afterAll(function () {
     TestSuite::cleanDatabase();
 });

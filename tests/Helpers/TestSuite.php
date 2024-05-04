@@ -3,6 +3,7 @@
 namespace Tests\Helpers;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class TestSuite
 {
@@ -19,6 +20,11 @@ class TestSuite
     public static function cleanDatabase(): void
     {
         shell_exec('php artisan migrate:fresh --env=testing');
+    }
+
+    public static function cleanTenant(string $dbname): void
+    {
+        DB::statement("DROP DATABASE $dbname");
     }
 
     public static function cleanupTable(Model $model): void

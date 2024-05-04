@@ -67,8 +67,6 @@ readonly class TenancyService
                 $tenant->forgetCurrent();
             }
 
-            DB::rollBack();
-
             $tenant = $this->tenantCrudRepository->findBy([TenantColumns::DOMAIN => $createTenantForm->getDomain()]);
 
             if (!$tenant) {

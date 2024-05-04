@@ -2,7 +2,6 @@
     <div class="flex justify-center">
         <div class="block p-6 rounded-lg shadow-lg bg-white w-3/4">
             <div class="pb-5 flex align-middle justify-around">
-                {{--                @dd($this)--}}
                 @if($isAdmin)
 
                     <div class="text-center hover:bg-gray-100 p-4">
