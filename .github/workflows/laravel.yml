@@ -11,14 +11,14 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      postgres:
+      pgsql:
         image: postgres:15
         env:
-          POSTGRES_USER: sail
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: laravel
+          POSTGRES_DB: '${DB_DATABASE}'
+          POSTGRES_USER: '${DB_USERNAME}'
+          POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
         ports:
-          - 5432:5432
+          - '${FORWARD_DB_PORT:-5432}:5432'
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
