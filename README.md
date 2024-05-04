@@ -1,3 +1,4 @@
+[![codecov](https://codecov.io/gh/GeorgePapanotas1/mth-project/graph/badge.svg?token=0L6EVUWIGM)](https://codecov.io/gh/GeorgePapanotas1/mth-project)
 # Installation
 
 1. Clone the repository
