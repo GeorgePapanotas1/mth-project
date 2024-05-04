@@ -1,7 +1,7 @@
 # Installation
 
 1. Clone the repository
-2. Make setup.sh executable (chmod 777 setup.sh on unix systems)
+2. Make setup.sh executable (chmod +x setup.sh on unix systems)
 3. run setup.sh
 
 # Functional Requirements Documentation
