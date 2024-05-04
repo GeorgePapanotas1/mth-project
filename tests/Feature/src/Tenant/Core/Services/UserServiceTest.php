@@ -8,6 +8,7 @@ use Mth\Tenant\Adapters\Models\User;
 use Mth\Tenant\Core\Dto\Authorization\Forms\CreateRoleForm;
 use Mth\Tenant\Core\Dto\User\Forms\CreateUserForm;
 use Mth\Tenant\Core\Dto\User\Forms\UpdateUserForm;
+use Mth\Tenant\Core\Dto\User\Projections\UserProjection;
 use Mth\Tenant\Core\Exceptions\Authorization\UnauthorizedException;
 use Tests\Helpers\TestSuite;
 
@@ -103,4 +104,46 @@ test('it fetches all users paginated', function () {
     $secondBatch = $userService->getUsers(15, 2);
 
     expect($secondBatch)->toHaveCount(1);
+});
+
+test('only admin can delete a user', function () {
+
+    Role::create(['name' => 'Admin']);
+    Role::create(['name' => 'Moderator']);
+
+    $admin = User::factory()->create()->assignRole('Admin');
+    $mod = User::factory()->create()->assignRole('Moderator');
+
+    $users = User::factory()->count(2)->create();
+
+    $userService = getUserService();
+
+    $result = $userService->delete($admin, $users[0]->id);
+
+    expect($result)->toBeTrue();
+
+    $result = $userService->delete($mod, $users[1]->id);
+
+
+})->throws(UnauthorizedException::class);
+
+test('find returns projection', function () {
+   $user = User::factory()->create();
+
+   $userService = getUserService();
+
+   $userFound = $userService->find($user->id);
+
+   expect($userFound)
+       ->toBeInstanceOf(UserProjection::class);
+});
+
+test('find returns null', function () {
+
+    $userService = getUserService();
+
+    $userFound = $userService->find('9bf656d2-e79a-403c-a46e-a78fef60cee6');
+
+    expect($userFound)
+        ->toBeNull();
 });

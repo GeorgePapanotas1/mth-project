@@ -10,6 +10,7 @@ use Mth\Tenant\Core\Constants\ColumnNames\UsersCompaniesColumns;
 use Mth\Tenant\Core\Dto\Authorization\Forms\CreateRoleForm;
 use Mth\Tenant\Core\Dto\Company\Forms\CreateCompanyForm;
 use Mth\Tenant\Core\Dto\Company\Forms\UpdateCompanyForm;
+use Mth\Tenant\Core\Dto\Company\Projections\CompanyProjection;
 use Mth\Tenant\Core\Exceptions\Authorization\UnauthorizedException;
 use Tests\Helpers\TestSuite;
 
@@ -220,6 +221,51 @@ test('it returns all companies of user', function () {
 
     expect($companiesOfUser)
         ->toHaveCount(15);
+});
+
+test('find returns a projection on admin', function () {
+    $company = Company::factory()->create();
+    $user = User::factory()->create();
+
+    Role::create(['name' => 'Admin']);
+
+    $user->assignRole('Admin');
+
+    $companyService = getCompanyService();
+
+    $newCompany = $companyService->find($user, $company->id);
+
+    expect($newCompany)
+        ->not()
+        ->toBeNull()
+        ->and($newCompany)
+        ->toBeInstanceOf(CompanyProjection::class);
+});
+
+test('find throws error on non admin', function () {
+    $company = Company::factory()->create();
+    $user = User::factory()->create();
+    Role::create(['name' => 'Moderator']);
+    $user->assignRole('Moderator');
+
+    $companyService = getCompanyService();
+
+    $newCompany = $companyService->find($user, $company->id);
+})->throws(UnauthorizedException::class);
+
+
+test('find returns null on not found', function () {
+    $company = Company::factory()->create();
+    $user = User::factory()->create();
+    Role::create(['name' => 'Admin']);
+    $user->assignRole('Admin');
+
+    $companyService = getCompanyService();
+
+    $newCompany = $companyService->find($user, $user->id);
+
+    expect($newCompany)->toBeNull();
+
 });
 
 function testCompanyCreation(Company $company, CreateCompanyForm $companyForm): void
