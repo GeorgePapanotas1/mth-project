@@ -163,3 +163,14 @@ On a real-world scenario the core module would also be extended to include items
 - Decorators
 - Domain / Models
 - more business logic specific item.
+
+
+## Testing
+
+Integration / Feature tests have been created for this on folder tests/Feature/src along with a dedicated testsuite named Domain. I ommited frontend tests because I think Frontend should be tested by a dedicated tool
+like Cypress. 
+
+Each application context is tested independently (except a single service test that uses the testing databases as the landlord and creates a tenant db). All other tests are using the testing database and treats it as tenant or landlord.
+Please refer to tests/Helpers/TestSuite.php for more information.
+
+On tests/Pest.php, i have created a set of tests that are ensuring common crud operations are tested and these are used to test each entities' CRUD Service.
